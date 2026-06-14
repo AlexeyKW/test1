@@ -254,6 +254,43 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
+        function iconUrlForFeature(feature) {
+            var category = String(feature.properties['category'] || '').toLowerCase();
+            if (category.indexOf('развлекательн') >= 0 || category.indexOf('бильярд') >= 0 || category.indexOf('компьютерн') >= 0) {
+                return 'images/разв центр.svg';
+            }
+            if (category.indexOf('церк') >= 0 || category.indexOf('храм') >= 0) {
+                return 'images/церкви и храмы.svg';
+            }
+            if (category.indexOf('парк') >= 0) {
+                return 'images/парк555555 готовый.svg';
+            }
+            if (category.indexOf('ипподром') >= 0) {
+                return 'images/ипподром готов.svg';
+            }
+            if (category.indexOf('памятник') >= 0 || category.indexOf('монумент') >= 0) {
+                return 'images/млнумент славы вектор.svg';
+            }
+            if (category.indexOf('пляж') >= 0) {
+                return 'images/рисуем.svg';
+            }
+            if (category.indexOf('водонапорн') >= 0 || category.indexOf('башн') >= 0) {
+                return 'images/водонапорная башня.svg';
+            }
+            if (category.indexOf('горск') >= 0) {
+                return 'images/мкр горский.svg';
+            }
+            if (category.indexOf('покрышкин') >= 0) {
+                return 'images/покрышкин.svg';
+            }
+            if (category.indexOf('ленин') >= 0) {
+                return 'images/ленин.svg';
+            }
+            if (category.indexOf('владимир') >= 0 || category.indexOf('княз') >= 0) {
+                return 'images/князь владимир.svg';
+            }
+            return 'images/рисуем.svg';
+        }
         function style__2_0(feature) {
             switch(String(feature.properties['id'])) {
                 case '1':
@@ -741,11 +778,26 @@
             pane: 'pane__2',
             onEachFeature: pop__2,
             pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style__2_0(feature));
+                var style = style__2_0(feature);
+                if (style.radius !== undefined) {
+                    return L.circleMarker(latlng, style);
+                }
+                var iconSize = 30.4;
+                if (style.icon && style.icon.options && style.icon.options.iconSize) {
+                    iconSize = style.icon.options.iconSize[0];
+                }
+                var marker = L.marker(latlng, {
+                    pane: style.pane,
+                    interactive: style.interactive,
+                    rotationAngle: style.rotationAngle || 0,
+                    rotationOrigin: style.rotationOrigin || 'center center',
+                    icon: L.icon({
+                        iconUrl: iconUrlForFeature(feature),
+                        iconSize: [iconSize, iconSize],
+                        iconAnchor: [iconSize / 2, iconSize / 2]
+                    })
+                });
+                return marker;
             },
         });
         bounds_group.addLayer(layer__2);
