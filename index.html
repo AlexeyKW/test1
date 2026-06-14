@@ -69,7 +69,7 @@
             continuousWorld: false,
             worldCopyJump: false, 
             zoomControl:false, maxZoom:28, minZoom:1
-        }).fitBounds([[54.95503264539721,82.82414070658913],[55.0109777455956,82.95355160373181]]);
+        }).fitBounds([[54.97932976556145,82.82988149074806],[55.03524102382102,82.95929238789074]]);
         var hash = new L.Hash(map);
         map.attributionControl.setPrefix('<a href="https://github.com/qgis2web/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
         var autolinker = new Autolinker({truncate: {length: 30, location: 'smart'}});
@@ -242,10 +242,6 @@
                     <tr>\
                         <td colspan="2">' + (feature.properties['photo'] !== null ? '<img src="images/' + String(feature.properties['photo']).replace(/[\\/:]/g, '_').trim().replace(/'/g, '\'').replace(/"/g, '&quot;') + '">' : '') + '</td>\
                     </tr>\
-                    <tr>\
-                        <th scope="row">Информация</th>\
-                        <td class="visible-with-data" id="information">' + (feature.properties['information'] !== null ? autolinker.link(String(feature.properties['information']).replace(/'/g, '\'').toLocaleString()) : '') + '</td>\
-                    </tr>\
                 </table>';
             var content = removeEmptyRowsFromPopupContent(popupContent, feature);
 			layer.on('popupopen', function(e) {
@@ -254,43 +250,6 @@
 			layer.bindPopup(content, { maxHeight: 400 });
         }
 
-        function iconUrlForFeature(feature) {
-            var category = String(feature.properties['category'] || '').toLowerCase();
-            if (category.indexOf('развлекательн') >= 0 || category.indexOf('бильярд') >= 0 || category.indexOf('компьютерн') >= 0) {
-                return 'images/разв центр.svg';
-            }
-            if (category.indexOf('церк') >= 0 || category.indexOf('храм') >= 0) {
-                return 'images/церкви и храмы.svg';
-            }
-            if (category.indexOf('парк') >= 0) {
-                return 'images/парк555555 готовый.svg';
-            }
-            if (category.indexOf('ипподром') >= 0) {
-                return 'images/ипподром готов.svg';
-            }
-            if (category.indexOf('памятник') >= 0 || category.indexOf('монумент') >= 0) {
-                return 'images/млнумент славы вектор.svg';
-            }
-            if (category.indexOf('пляж') >= 0) {
-                return 'images/рисуем.svg';
-            }
-            if (category.indexOf('водонапорн') >= 0 || category.indexOf('башн') >= 0) {
-                return 'images/водонапорная башня.svg';
-            }
-            if (category.indexOf('горск') >= 0) {
-                return 'images/мкр горский.svg';
-            }
-            if (category.indexOf('покрышкин') >= 0) {
-                return 'images/покрышкин.svg';
-            }
-            if (category.indexOf('ленин') >= 0) {
-                return 'images/ленин.svg';
-            }
-            if (category.indexOf('владимир') >= 0 || category.indexOf('княз') >= 0) {
-                return 'images/князь владимир.svg';
-            }
-            return 'images/рисуем.svg';
-        }
         function style__2_0(feature) {
             switch(String(feature.properties['id'])) {
                 case '1':
@@ -320,22 +279,6 @@
             iconUrl: 'markers/_2.svg',
             iconSize: [47.33698, 47.33698]
         }),
-                interactive: true,
-            }
-                    break;
-                case '4':
-                    return {
-                pane: 'pane__2',
-                radius: 4.0,
-                opacity: 1,
-                color: 'rgba(35,35,35,1.0)',
-                dashArray: '',
-                lineCap: 'butt',
-                lineJoin: 'miter',
-                weight: 1,
-                fill: true,
-                fillOpacity: 1,
-                fillColor: 'rgba(112,112,220,1.0)',
                 interactive: true,
             }
                     break;
@@ -418,12 +361,6 @@
             }
                     break;
                 case '16':
-                    return {
-                pane: 'pane__2',
-                interactive: true,
-            }
-                    break;
-                case '17':
                     return {
                 pane: 'pane__2',
                 interactive: true,
@@ -759,12 +696,6 @@
                 interactive: true,
             }
                     break;
-                default:
-                    return {
-                pane: 'pane__2',
-                interactive: true,
-            }
-                    break;
             }
         }
         map.createPane('pane__2');
@@ -778,32 +709,17 @@
             pane: 'pane__2',
             onEachFeature: pop__2,
             pointToLayer: function (feature, latlng) {
-                var style = style__2_0(feature);
-                if (style.radius !== undefined) {
-                    return L.circleMarker(latlng, style);
-                }
-                var iconSize = 30.4;
-                if (style.icon && style.icon.options && style.icon.options.iconSize) {
-                    iconSize = style.icon.options.iconSize[0];
-                }
-                var marker = L.marker(latlng, {
-                    pane: style.pane,
-                    interactive: style.interactive,
-                    rotationAngle: style.rotationAngle || 0,
-                    rotationOrigin: style.rotationOrigin || 'center center',
-                    icon: L.icon({
-                        iconUrl: iconUrlForFeature(feature),
-                        iconSize: [iconSize, iconSize],
-                        iconAnchor: [iconSize / 2, iconSize / 2]
-                    })
-                });
-                return marker;
+                var context = {
+                    feature: feature,
+                    variables: {}
+                };
+                return L.circleMarker(latlng, style__2_0(feature));
             },
         });
         bounds_group.addLayer(layer__2);
         map.addLayer(layer__2);
         var overlaysTree = [
-            {label: 'Достопримечательности<br /><table><tr><td style="text-align: center;"><img src="legend/_2_10.png" /></td><td>1</td></tr><tr><td style="text-align: center;"><img src="legend/_2_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/_2_32.png" /></td><td>3</td></tr><tr><td style="text-align: center;"><img src="legend/_2_43.png" /></td><td>4</td></tr><tr><td style="text-align: center;"><img src="legend/_2_54.png" /></td><td>5</td></tr><tr><td style="text-align: center;"><img src="legend/_2_65.png" /></td><td>6</td></tr><tr><td style="text-align: center;"><img src="legend/_2_6.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/_2_77.png" /></td><td>7</td></tr><tr><td style="text-align: center;"><img src="legend/_2_88.png" /></td><td>8</td></tr><tr><td style="text-align: center;"><img src="legend/_2_99.png" /></td><td>9</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1010.png" /></td><td>10</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1111.png" /></td><td>11</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1212.png" /></td><td>12</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1313.png" /></td><td>13</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1414.png" /></td><td>14</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1515.png" /></td><td>15</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1616.png" /></td><td>16</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1717.png" /></td><td>17</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1818.png" /></td><td>18</td></tr><tr><td style="text-align: center;"><img src="legend/_2_19.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/_2_1920.png" /></td><td>19</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2021.png" /></td><td>20</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2122.png" /></td><td>21</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2223.png" /></td><td>22</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2324.png" /></td><td>23</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2425.png" /></td><td>24</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2526.png" /></td><td>25</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2627.png" /></td><td>26</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2728.png" /></td><td>27</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2829.png" /></td><td>28</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2930.png" /></td><td>29</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3031.png" /></td><td>30</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3132.png" /></td><td>31</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3233.png" /></td><td>32</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3334.png" /></td><td>33</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3435.png" /></td><td>34</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3536.png" /></td><td>35</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3637.png" /></td><td>36</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3738.png" /></td><td>37</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3839.png" /></td><td>38</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3940.png" /></td><td>39</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4041.png" /></td><td>40</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4142.png" /></td><td>41</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4243.png" /></td><td>42</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4344.png" /></td><td>43</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4445.png" /></td><td>44</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4546.png" /></td><td>45</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4647.png" /></td><td>46</td></tr><tr><td style="text-align: center;"><img src="legend/_2_48.png" /></td><td></td></tr><tr><td style="text-align: center;"><img src="legend/_2_4749.png" /></td><td>47</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4850.png" /></td><td>48</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4951.png" /></td><td>49</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5052.png" /></td><td>50</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5153.png" /></td><td>51</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5254.png" /></td><td>52</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5355.png" /></td><td>53</td></tr></table>', layer: layer__2},
+            {label: 'Достопримечательности<br /><table><tr><td style="text-align: center;"><img src="legend/_2_10.png" /></td><td>1</td></tr><tr><td style="text-align: center;"><img src="legend/_2_21.png" /></td><td>2</td></tr><tr><td style="text-align: center;"><img src="legend/_2_32.png" /></td><td>3</td></tr><tr><td style="text-align: center;"><img src="legend/_2_53.png" /></td><td>5</td></tr><tr><td style="text-align: center;"><img src="legend/_2_64.png" /></td><td>6</td></tr><tr><td style="text-align: center;"><img src="legend/_2_75.png" /></td><td>7</td></tr><tr><td style="text-align: center;"><img src="legend/_2_86.png" /></td><td>8</td></tr><tr><td style="text-align: center;"><img src="legend/_2_97.png" /></td><td>9</td></tr><tr><td style="text-align: center;"><img src="legend/_2_108.png" /></td><td>10</td></tr><tr><td style="text-align: center;"><img src="legend/_2_119.png" /></td><td>11</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1210.png" /></td><td>12</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1311.png" /></td><td>13</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1412.png" /></td><td>14</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1513.png" /></td><td>15</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1614.png" /></td><td>16</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1815.png" /></td><td>18</td></tr><tr><td style="text-align: center;"><img src="legend/_2_1916.png" /></td><td>19</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2017.png" /></td><td>20</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2118.png" /></td><td>21</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2219.png" /></td><td>22</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2320.png" /></td><td>23</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2421.png" /></td><td>24</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2522.png" /></td><td>25</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2623.png" /></td><td>26</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2724.png" /></td><td>27</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2825.png" /></td><td>28</td></tr><tr><td style="text-align: center;"><img src="legend/_2_2926.png" /></td><td>29</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3027.png" /></td><td>30</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3128.png" /></td><td>31</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3229.png" /></td><td>32</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3330.png" /></td><td>33</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3431.png" /></td><td>34</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3532.png" /></td><td>35</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3633.png" /></td><td>36</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3734.png" /></td><td>37</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3835.png" /></td><td>38</td></tr><tr><td style="text-align: center;"><img src="legend/_2_3936.png" /></td><td>39</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4037.png" /></td><td>40</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4138.png" /></td><td>41</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4239.png" /></td><td>42</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4340.png" /></td><td>43</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4441.png" /></td><td>44</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4542.png" /></td><td>45</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4643.png" /></td><td>46</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4744.png" /></td><td>47</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4845.png" /></td><td>48</td></tr><tr><td style="text-align: center;"><img src="legend/_2_4946.png" /></td><td>49</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5047.png" /></td><td>50</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5148.png" /></td><td>51</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5249.png" /></td><td>52</td></tr><tr><td style="text-align: center;"><img src="legend/_2_5350.png" /></td><td>53</td></tr></table>', layer: layer__2},
             {label: '<img src="legend/_1.png" /> Дороги основные', layer: layer__1},
             {label: "OSM Standard", layer: layer_OSMStandard_0},]
         var lay = L.control.layers.tree(null, overlaysTree,{
