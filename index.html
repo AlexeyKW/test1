@@ -709,11 +709,11 @@
             pane: 'pane__2',
             onEachFeature: pop__2,
             pointToLayer: function (feature, latlng) {
-                var context = {
-                    feature: feature,
-                    variables: {}
-                };
-                return L.circleMarker(latlng, style__2_0(feature));
+                var style = style__2_0(feature);
+                if (style && style.icon) {
+                    return L.marker(latlng, style);
+                }
+                return L.circleMarker(latlng, style);
             },
         });
         bounds_group.addLayer(layer__2);
